@@ -7,11 +7,9 @@ import {
 } from "../types/question-source";
 import { getRandomArrayIndex } from "./app-utils";
 
-export class QuestionGenerator {
-  constructor(private source: Source) {}
-
-  private selectNCountries(
-    countries = this.source.countries,
+export function QuestionGenerator(source: Source) {
+  function selectNCountries(
+    countries = source.countries,
     amount = 4
   ): Country[] {
     const selectedCountries = [];
@@ -22,24 +20,24 @@ export class QuestionGenerator {
     return selectedCountries;
   }
 
-  private selectCorrectCountry(countries: MappedCountry[]) {
+  function selectCorrectCountry(countries: MappedCountry[]) {
     const countriesRandomIndex = getRandomArrayIndex(countries);
     return countries[countriesRandomIndex];
   }
 
-  private selectLanguage() {
-    const { languages } = this.source;
+  function selectLanguage() {
+    const { languages } = source;
     const languagesRandomIndex = getRandomArrayIndex(languages);
     return languages[languagesRandomIndex];
   }
 
-  whichCountryForGivenCapital(): Question {
-    const countries = this.selectNCountries();
+  function whichCountryForGivenCapital(): Question {
+    const countries = selectNCountries();
     const countriesCapitalAndName = countries.map(({ name, capital }) => ({
       name,
       capital,
     }));
-    const correctCountry = this.selectCorrectCountry(countriesCapitalAndName);
+    const correctCountry = selectCorrectCountry(countriesCapitalAndName);
 
     return {
       type: QuestionType.CAPITAL_OF,
@@ -49,14 +47,14 @@ export class QuestionGenerator {
     };
   }
 
-  whichCountryForGivenFlag(): Question {
-    const countries = this.selectNCountries();
+  function whichCountryForGivenFlag(): Question {
+    const countries = selectNCountries();
     const countriesNameAndCode = countries.map(({ name, code }) => ({
       name,
       code: code.toLowerCase(),
     }));
 
-    const correctCountry = this.selectCorrectCountry(countriesNameAndCode);
+    const correctCountry = selectCorrectCountry(countriesNameAndCode);
 
     return {
       type: QuestionType.FLAG_OF,
@@ -67,9 +65,9 @@ export class QuestionGenerator {
     };
   }
 
-  private selectLanguageSpeaker(language: Language) {
-    const { countries } = this.source;
-    return this.selectNCountries(
+  function selectLanguageSpeaker(language: Language) {
+    const { countries } = source;
+    return selectNCountries(
       countries.filter((country) =>
         country.languages.some(({ name }) => name === language.name)
       ),
@@ -77,9 +75,9 @@ export class QuestionGenerator {
     )[0];
   }
 
-  private selectNotLanguageSpeakers(language: Language) {
-    const { countries } = this.source;
-    return this.selectNCountries(
+  function selectNotLanguageSpeakers(language: Language) {
+    const { countries } = source;
+    return selectNCountries(
       countries.filter((country) =>
         country.languages.some(({ name }) => name !== language.name)
       ),
@@ -87,12 +85,10 @@ export class QuestionGenerator {
     );
   }
 
-  whichCountryForGivenLanguage(): Question {
-    const language = this.selectLanguage();
-    const languageSpeakerCountry = this.selectLanguageSpeaker(language);
-    const notLanguageSpeakerCountries = this.selectNotLanguageSpeakers(
-      language
-    );
+  function whichCountryForGivenLanguage(): Question {
+    const language = selectLanguage();
+    const languageSpeakerCountry = selectLanguageSpeaker(language);
+    const notLanguageSpeakerCountries = selectNotLanguageSpeakers(language);
 
     const options = [
       ...notLanguageSpeakerCountries.map(({ name }) => name),
@@ -107,19 +103,26 @@ export class QuestionGenerator {
     };
   }
 
-  generate(amount: number) {
-    const generatorMethods = [
-      "whichCountryForGivenFlag",
-      "whichCountryForGivenCapital",
-      "whichCountryForGivenLanguage",
-    ];
-    const questions: Question[] = [];
+  // function generate(amount: number) {
+  //   const generatorMethods = [
+  //     "whichCountryForGivenFlag",
+  //     "whichCountryForGivenCapital",
+  //     "whichCountryForGivenLanguage",
+  //   ];
+  //   const questions: Question[] = [];
 
-    for (let i = 0; i < amount; i++) {
-      const randomIndex = getRandomArrayIndex(generatorMethods);
-      questions.push(this[generatorMethods[randomIndex]]());
-    }
+  //   for (let i = 0; i < amount; i++) {
+  //     const randomIndex = getRandomArrayIndex(generatorMethods);
+  //     // questions.push(this[generatorMethods[randomIndex]]());
+  //   }
 
-    return questions;
-  }
+  //   return questions;
+  // }
+
+  return {
+    whichCountryForGivenCapital,
+    whichCountryForGivenFlag,
+    whichCountryForGivenLanguage,
+    // generate,
+  };
 }
