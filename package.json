@@ -1,12 +1,23 @@
 {
   "name": "country-quiz-generator",
   "version": "0.0.1",
-  "description": "Generate questions about countries ramdomly",
-  "main": "index.js",
+  "description": "Generate multiple choice questions about countries randomly",
+  "repository": {
+    "url": "https://github.com/rmrantunes/country-quiz-generator"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "quiz",
+    "generator",
+    "countries"
+  ],
   "author": "https://github.com/rmrantunes",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
 }
