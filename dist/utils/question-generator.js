@@ -78,24 +78,28 @@ function countryQuiz(source = { countries: countries_json_1.default, languages: 
             title: `Which one of these countries speaks ${language.name}?`,
         };
     }
-    function generateQuiz(amount) {
-        const generatorMethods = {
-            whichCountryForGivenCapital,
-            whichCountryForGivenFlag,
-            whichCountryForGivenLanguage,
-        };
-        const generatorMethodsKeys = Object.keys(generatorMethods);
+    const questionGenerators = {
+        whichCountryForGivenCapital,
+        whichCountryForGivenFlag,
+        whichCountryForGivenLanguage,
+    };
+    function generateQuiz(amount, options) {
+        let questionGeneratorsKeys = (options === null || options === void 0 ? void 0 : options.questionTypesToSelect) ||
+            Object.keys(questionGenerators);
+        if (options === null || options === void 0 ? void 0 : options.questionTypesToExclude) {
+            questionGeneratorsKeys = questionGeneratorsKeys.filter((key) => { var _a; return !((_a = options.questionTypesToExclude) === null || _a === void 0 ? void 0 : _a.includes(key)); });
+        }
+        if (questionGeneratorsKeys.length === 0)
+            throw new Error("You must leave at least ONE question type");
         const questions = [];
         for (let i = 0; i < amount; i++) {
-            const randomIndex = app_utils_1.getRandomArrayIndex(generatorMethodsKeys);
-            questions.push(generatorMethods[generatorMethodsKeys[randomIndex]]());
+            const randomIndex = app_utils_1.getRandomArrayIndex(questionGeneratorsKeys);
+            questions.push(questionGenerators[questionGeneratorsKeys[randomIndex]]());
         }
         return questions;
     }
     return {
-        whichCountryForGivenCapital,
-        whichCountryForGivenFlag,
-        whichCountryForGivenLanguage,
+        ...questionGenerators,
         generateQuiz,
     };
 }
