@@ -110,7 +110,7 @@ export function countryQuiz(
     };
   }
 
-  const generatorMethods = {
+  const questionGenerators = {
     whichCountryForGivenCapital,
     whichCountryForGivenFlag,
     whichCountryForGivenLanguage,
@@ -118,35 +118,33 @@ export function countryQuiz(
 
   function generateQuiz(
     amount: number,
-    options?: GenerateQuizOptions<keyof typeof generatorMethods>
+    options?: GenerateQuizOptions<keyof typeof questionGenerators>
   ) {
-    let generatorMethodsKeys =
+    let questionGeneratorsKeys =
       options?.selectQuestionTypes ||
-      (Object.keys(generatorMethods) as (keyof typeof generatorMethods)[]);
+      (Object.keys(questionGenerators) as (keyof typeof questionGenerators)[]);
 
     if (options?.excludeQuestionTypes) {
-      generatorMethodsKeys = generatorMethodsKeys.filter(
+      questionGeneratorsKeys = questionGeneratorsKeys.filter(
         (key) => !options.excludeQuestionTypes?.includes(key)
       );
     }
 
-    if (generatorMethodsKeys.length === 0)
+    if (questionGeneratorsKeys.length === 0)
       throw new Error("You must leave at least ONE question type");
 
     const questions: Question[] = [];
 
     for (let i = 0; i < amount; i++) {
-      const randomIndex = getRandomArrayIndex(generatorMethodsKeys);
-      questions.push(generatorMethods[generatorMethodsKeys[randomIndex]]());
+      const randomIndex = getRandomArrayIndex(questionGeneratorsKeys);
+      questions.push(questionGenerators[questionGeneratorsKeys[randomIndex]]());
     }
 
     return questions;
   }
 
   return {
-    whichCountryForGivenCapital,
-    whichCountryForGivenFlag,
-    whichCountryForGivenLanguage,
+    ...questionGenerators,
     generateQuiz,
   };
 }
