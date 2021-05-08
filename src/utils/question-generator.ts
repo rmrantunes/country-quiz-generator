@@ -121,12 +121,12 @@ export function countryQuiz(
     options?: GenerateQuizOptions<keyof typeof questionGenerators>
   ) {
     let questionGeneratorsKeys =
-      options?.selectQuestionTypes ||
+      options?.questionTypesToSelect ||
       (Object.keys(questionGenerators) as (keyof typeof questionGenerators)[]);
 
-    if (options?.excludeQuestionTypes) {
+    if (options?.questionTypesToExclude) {
       questionGeneratorsKeys = questionGeneratorsKeys.filter(
-        (key) => !options.excludeQuestionTypes?.includes(key)
+        (key) => !options.questionTypesToExclude?.includes(key)
       );
     }
 

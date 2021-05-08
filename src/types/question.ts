@@ -15,6 +15,6 @@ export interface Question {
 }
 
 export interface GenerateQuizOptions<K> {
-  selectQuestionTypes?: K[];
-  excludeQuestionTypes?: K[];
+  questionTypesToSelect?: K[];
+  questionTypesToExclude?: K[];
 }
