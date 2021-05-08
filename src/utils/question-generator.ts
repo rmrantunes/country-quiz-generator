@@ -1,4 +1,4 @@
-import { Question, QuestionType } from "../types/question";
+import { Question, QuestionType, GenerateQuizOptions } from "../types/question";
 import {
   Country,
   Language,
@@ -110,31 +110,41 @@ export function countryQuiz(
     };
   }
 
-  function generateQuiz(amount: number) {
-    const generatorMethods = {
-      whichCountryForGivenCapital,
-      whichCountryForGivenFlag,
-      whichCountryForGivenLanguage,
-    };
+  const questionGenerators = {
+    whichCountryForGivenCapital,
+    whichCountryForGivenFlag,
+    whichCountryForGivenLanguage,
+  };
 
-    const generatorMethodsKeys = Object.keys(
-      generatorMethods
-    ) as (keyof typeof generatorMethods)[];
+  function generateQuiz(
+    amount: number,
+    options?: GenerateQuizOptions<keyof typeof questionGenerators>
+  ) {
+    let questionGeneratorsKeys =
+      options?.questionTypesToSelect ||
+      (Object.keys(questionGenerators) as (keyof typeof questionGenerators)[]);
+
+    if (options?.questionTypesToExclude) {
+      questionGeneratorsKeys = questionGeneratorsKeys.filter(
+        (key) => !options.questionTypesToExclude?.includes(key)
+      );
+    }
+
+    if (questionGeneratorsKeys.length === 0)
+      throw new Error("You must leave at least ONE question type");
 
     const questions: Question[] = [];
 
     for (let i = 0; i < amount; i++) {
-      const randomIndex = getRandomArrayIndex(generatorMethodsKeys);
-      questions.push(generatorMethods[generatorMethodsKeys[randomIndex]]());
+      const randomIndex = getRandomArrayIndex(questionGeneratorsKeys);
+      questions.push(questionGenerators[questionGeneratorsKeys[randomIndex]]());
     }
 
     return questions;
   }
 
   return {
-    whichCountryForGivenCapital,
-    whichCountryForGivenFlag,
-    whichCountryForGivenLanguage,
+    ...questionGenerators,
     generateQuiz,
   };
 }

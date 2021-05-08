@@ -13,3 +13,8 @@ export interface Question {
   correctAnswer: string;
   options: string[];
 }
+
+export interface GenerateQuizOptions<K> {
+  questionTypesToSelect?: K[];
+  questionTypesToExclude?: K[];
+}
