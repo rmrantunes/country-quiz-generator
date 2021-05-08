@@ -1,6 +1,6 @@
 {
   "name": "country-quiz-generator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Generate multiple choice questions about countries randomly",
   "repository": {
     "url": "https://github.com/rmrantunes/country-quiz-generator"
