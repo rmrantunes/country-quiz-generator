@@ -1,4 +1,4 @@
-import { Question, QuestionType } from "../types/question";
+import { Question, QuestionType, GenerateQuizOptions } from "../types/question";
 import {
   Country,
   Language,
@@ -110,16 +110,28 @@ export function countryQuiz(
     };
   }
 
-  function generateQuiz(amount: number) {
-    const generatorMethods = {
-      whichCountryForGivenCapital,
-      whichCountryForGivenFlag,
-      whichCountryForGivenLanguage,
-    };
+  const generatorMethods = {
+    whichCountryForGivenCapital,
+    whichCountryForGivenFlag,
+    whichCountryForGivenLanguage,
+  };
 
-    const generatorMethodsKeys = Object.keys(
-      generatorMethods
-    ) as (keyof typeof generatorMethods)[];
+  function generateQuiz(
+    amount: number,
+    options?: GenerateQuizOptions<keyof typeof generatorMethods>
+  ) {
+    let generatorMethodsKeys =
+      options?.selectQuestionTypes ||
+      (Object.keys(generatorMethods) as (keyof typeof generatorMethods)[]);
+
+    if (options?.excludeQuestionTypes) {
+      generatorMethodsKeys = generatorMethodsKeys.filter(
+        (key) => !options.excludeQuestionTypes?.includes(key)
+      );
+    }
+
+    if (generatorMethodsKeys.length === 0)
+      throw new Error("You must leave at least ONE question type");
 
     const questions: Question[] = [];
 
