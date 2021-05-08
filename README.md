@@ -61,6 +61,8 @@ const myQuizWithoutLanguageQuestions = generateQuiz(2, {
 
 ### Generate one question - `questionGenerators`:
 
+You are free to generate only one question, instead of an array.
+
 ```js
 import { questionGenerators } from "country-quiz-generator";
 
