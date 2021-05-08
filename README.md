@@ -17,10 +17,9 @@ Generate multiple choice questions about countries randomly.
 - Which COUNTRY for given LANGUAGE
 - _(Soon)_ Which CAPITAL for given COUNTRY
 - _(Soon)_ Which LANGUAGE for given COUNTRY
+- _(Soon)_ Which CONTINENT for given COUNTRY
 
-### Generate a array of random questions:
-
-Below code returns a list of mixed questions.
+### Generate an array of questions - `generateQuiz(amount, options?)`:
 
 ```js
 import { generateQuiz } from "country-quiz-generator";
@@ -44,9 +43,23 @@ const myQuiz = generateQuiz(2);
 // ];
 ```
 
-_Later you'll be able to pass an options object to choose what types of questions to generate with `generateQuiz`, as an alternative for this fully mixed questions array._
+#### (param) Options:
 
-### Generate question by type:
+You are also able to choose what types of question to **select** or **exclude** when using `generateQuiz`, as an alternative for above fully mixed questions array.
+
+```js
+import { generateQuiz } from "country-quiz-generator";
+
+const myQuizWithOnlyFlagQuestions = generateQuiz(2, {
+  questionTypesToSelect: ["whichCountryForGivenFlag"],
+});
+
+const myQuizWithoutLanguageQuestions = generateQuiz(2, {
+  questionTypesToExclude: ["whichCountryForGivenLanguage"],
+});
+```
+
+### Generate one question - `questionGenerators`:
 
 ```js
 import { questionGenerators } from "country-quiz-generator";
