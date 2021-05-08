@@ -5,30 +5,35 @@ import {
   MappedCountry,
   Source,
 } from "../types/question-source";
-import { getRandomArrayIndex } from "./app-utils";
+import { getRandomArrayIndex, randomSort } from "./app-utils";
 
-export function QuestionGenerator(source: Source) {
+import countries from "../source/countries.json";
+import languages from "../source/languages.json";
+
+export function countryQuiz(
+  source: Source = { countries: countries as Country[], languages }
+) {
   function selectNCountries(
     countries = source.countries,
     amount = 4
   ): Country[] {
     const selectedCountries = [];
     for (let i = 0; i < amount; i++) {
-      const countriesRandomIndex = getRandomArrayIndex(countries);
-      selectedCountries.push(countries[countriesRandomIndex]);
+      const randomIndex = getRandomArrayIndex(countries);
+      selectedCountries.push(countries[randomIndex]);
     }
     return selectedCountries;
   }
 
   function selectCorrectCountry(countries: MappedCountry[]) {
-    const countriesRandomIndex = getRandomArrayIndex(countries);
-    return countries[countriesRandomIndex];
+    const randomIndex = getRandomArrayIndex(countries);
+    return countries[randomIndex];
   }
 
   function selectLanguage() {
     const { languages } = source;
-    const languagesRandomIndex = getRandomArrayIndex(languages);
-    return languages[languagesRandomIndex];
+    const randomIndex = getRandomArrayIndex(languages);
+    return languages[randomIndex];
   }
 
   function whichCountryForGivenCapital(): Question {
@@ -40,7 +45,7 @@ export function QuestionGenerator(source: Source) {
     const correctCountry = selectCorrectCountry(countriesCapitalAndName);
 
     return {
-      type: QuestionType.CAPITAL_OF,
+      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_CAPITAL,
       title: correctCountry.capital + " is the capital of",
       correctAnswer: correctCountry.name,
       options: countriesCapitalAndName.map(({ name }) => name),
@@ -57,7 +62,7 @@ export function QuestionGenerator(source: Source) {
     const correctCountry = selectCorrectCountry(countriesNameAndCode);
 
     return {
-      type: QuestionType.FLAG_OF,
+      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_FLAG,
       flagSrc: `https://www.countryflags.io/${correctCountry.code}/flat/64.png`,
       title: "Which country does this flag belongs to?",
       correctAnswer: correctCountry.name,
@@ -65,7 +70,7 @@ export function QuestionGenerator(source: Source) {
     };
   }
 
-  function selectLanguageSpeaker(language: Language) {
+  function selectLanguageSpeakerCountry(language: Language) {
     const { countries } = source;
     return selectNCountries(
       countries.filter((country) =>
@@ -75,7 +80,7 @@ export function QuestionGenerator(source: Source) {
     )[0];
   }
 
-  function selectNotLanguageSpeakers(language: Language) {
+  function selectNotLanguageSpeakerCountries(language: Language) {
     const { countries } = source;
     return selectNCountries(
       countries.filter((country) =>
@@ -87,42 +92,49 @@ export function QuestionGenerator(source: Source) {
 
   function whichCountryForGivenLanguage(): Question {
     const language = selectLanguage();
-    const languageSpeakerCountry = selectLanguageSpeaker(language);
-    const notLanguageSpeakerCountries = selectNotLanguageSpeakers(language);
+    const languageSpeakerCountry = selectLanguageSpeakerCountry(language);
+    const notLanguageSpeakerCountries = selectNotLanguageSpeakerCountries(
+      language
+    );
 
     const options = [
       ...notLanguageSpeakerCountries.map(({ name }) => name),
       languageSpeakerCountry.name,
-    ];
+    ].sort(randomSort);
 
     return {
-      type: QuestionType.LANGUAGE_OF,
+      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_LANGUAGE,
       correctAnswer: languageSpeakerCountry.name,
       options,
       title: `Which one of these countries speaks ${language.name}?`,
     };
   }
 
-  // function generate(amount: number) {
-  //   const generatorMethods = [
-  //     "whichCountryForGivenFlag",
-  //     "whichCountryForGivenCapital",
-  //     "whichCountryForGivenLanguage",
-  //   ];
-  //   const questions: Question[] = [];
+  function generateQuiz(amount: number) {
+    const generatorMethods = {
+      whichCountryForGivenCapital,
+      whichCountryForGivenFlag,
+      whichCountryForGivenLanguage,
+    };
 
-  //   for (let i = 0; i < amount; i++) {
-  //     const randomIndex = getRandomArrayIndex(generatorMethods);
-  //     // questions.push(this[generatorMethods[randomIndex]]());
-  //   }
+    const generatorMethodsKeys = Object.keys(
+      generatorMethods
+    ) as (keyof typeof generatorMethods)[];
 
-  //   return questions;
-  // }
+    const questions: Question[] = [];
+
+    for (let i = 0; i < amount; i++) {
+      const randomIndex = getRandomArrayIndex(generatorMethodsKeys);
+      questions.push(generatorMethods[generatorMethodsKeys[randomIndex]]());
+    }
+
+    return questions;
+  }
 
   return {
     whichCountryForGivenCapital,
     whichCountryForGivenFlag,
     whichCountryForGivenLanguage,
-    // generate,
+    generateQuiz,
   };
 }
