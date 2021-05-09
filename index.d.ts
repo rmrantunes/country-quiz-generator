@@ -26,30 +26,28 @@ export interface Source {
   languages: Language[];
 }
 
-export enum QuestionType {
-  WHICH_COUNTRY_BY_CAPITAL = "WHICH_COUNTRY_BY_CAPITAL",
-  WHICH_COUNTRY_BY_FLAG = "WHICH_COUNTRY_BY_FLAG",
-  WHICH_COUNTRY_BY_LANGUAGE = "WHICH_COUNTRY_BY_LANGUAGE",
-}
+export type QuestionType =
+  | "whichCountryForGivenCapital"
+  | "whichCountryForGivenFlag"
+  | "whichCountryForGivenLanguage";
 
 export interface Question {
-  type?: QuestionType;
+  type: QuestionType;
   flagSrc?: string;
   title: string;
   correctAnswer: string;
   options: string[];
 }
 
-export function countryQuiz(
-  source?: Source
-): {
-  whichCountryForGivenCapital: () => Question;
-  whichCountryForGivenFlag: () => Question;
-  whichCountryForGivenLanguage: () => Question;
-  generateQuiz: (amount: number) => Question[];
-};
+export interface GenerateQuizOptions<K> {
+  questionTypesToSelect?: K[];
+  questionTypesToExclude?: K[];
+}
 
-export function generateQuiz(amount: number): Question[];
+export function generateQuiz(
+  amount: number,
+  options?: GenerateQuizOptions<QuestionType> | undefined
+): Question[];
 
 export const questionGenerators: {
   whichCountryForGivenCapital: () => Question;

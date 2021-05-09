@@ -45,7 +45,7 @@ export function countryQuiz(
     const correctCountry = selectCorrectCountry(countriesCapitalAndName);
 
     return {
-      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_CAPITAL,
+      type: "whichCountryForGivenCapital",
       title: correctCountry.capital + " is the capital of",
       correctAnswer: correctCountry.name,
       options: countriesCapitalAndName.map(({ name }) => name),
@@ -62,7 +62,7 @@ export function countryQuiz(
     const correctCountry = selectCorrectCountry(countriesNameAndCode);
 
     return {
-      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_FLAG,
+      type: "whichCountryForGivenFlag",
       flagSrc: `https://www.countryflags.io/${correctCountry.code}/flat/64.png`,
       title: "Which country does this flag belongs to?",
       correctAnswer: correctCountry.name,
@@ -103,7 +103,7 @@ export function countryQuiz(
     ].sort(randomSort);
 
     return {
-      type: QuestionType.WHICH_COUNTRY_FOR_GIVEN_LANGUAGE,
+      type: "whichCountryForGivenLanguage",
       correctAnswer: languageSpeakerCountry.name,
       options,
       title: `Which one of these countries speaks ${language.name}?`,
@@ -118,11 +118,11 @@ export function countryQuiz(
 
   function generateQuiz(
     amount: number,
-    options?: GenerateQuizOptions<keyof typeof questionGenerators>
+    options?: GenerateQuizOptions<QuestionType>
   ) {
     let questionGeneratorsKeys =
       options?.questionTypesToSelect ||
-      (Object.keys(questionGenerators) as (keyof typeof questionGenerators)[]);
+      (Object.keys(questionGenerators) as QuestionType[]);
 
     if (options?.questionTypesToExclude) {
       questionGeneratorsKeys = questionGeneratorsKeys.filter(
