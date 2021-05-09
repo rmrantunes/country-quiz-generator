@@ -1,13 +1,12 @@
 // export type QuestionType = "capital-of" | "flag" | "language";
 
-export enum QuestionType {
-  WHICH_COUNTRY_FOR_GIVEN_CAPITAL = "WHICH_COUNTRY_FOR_GIVEN_CAPITAL",
-  WHICH_COUNTRY_FOR_GIVEN_FLAG = "WHICH_COUNTRY_FOR_GIVEN_FLAG",
-  WHICH_COUNTRY_FOR_GIVEN_LANGUAGE = "WHICH_COUNTRY_FOR_GIVEN_LANGUAGE",
-}
+export type QuestionType =
+  | "whichCountryForGivenCapital"
+  | "whichCountryForGivenFlag"
+  | "whichCountryForGivenLanguage";
 
 export interface Question {
-  type?: QuestionType;
+  type: QuestionType;
   flagSrc?: string;
   title: string;
   correctAnswer: string;
