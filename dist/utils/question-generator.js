@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.countryQuiz = void 0;
-const question_1 = require("../types/question");
 const app_utils_1 = require("./app-utils");
 const countries_json_1 = __importDefault(require("../source/countries.json"));
 const languages_json_1 = __importDefault(require("../source/languages.json"));
@@ -34,7 +33,7 @@ function countryQuiz(source = { countries: countries_json_1.default, languages: 
         }));
         const correctCountry = selectCorrectCountry(countriesCapitalAndName);
         return {
-            type: question_1.QuestionType.WHICH_COUNTRY_FOR_GIVEN_CAPITAL,
+            type: "whichCountryForGivenCapital",
             title: correctCountry.capital + " is the capital of",
             correctAnswer: correctCountry.name,
             options: countriesCapitalAndName.map(({ name }) => name),
@@ -48,7 +47,7 @@ function countryQuiz(source = { countries: countries_json_1.default, languages: 
         }));
         const correctCountry = selectCorrectCountry(countriesNameAndCode);
         return {
-            type: question_1.QuestionType.WHICH_COUNTRY_FOR_GIVEN_FLAG,
+            type: "whichCountryForGivenFlag",
             flagSrc: `https://www.countryflags.io/${correctCountry.code}/flat/64.png`,
             title: "Which country does this flag belongs to?",
             correctAnswer: correctCountry.name,
@@ -72,7 +71,7 @@ function countryQuiz(source = { countries: countries_json_1.default, languages: 
             languageSpeakerCountry.name,
         ].sort(app_utils_1.randomSort);
         return {
-            type: question_1.QuestionType.WHICH_COUNTRY_FOR_GIVEN_LANGUAGE,
+            type: "whichCountryForGivenLanguage",
             correctAnswer: languageSpeakerCountry.name,
             options,
             title: `Which one of these countries speaks ${language.name}?`,
